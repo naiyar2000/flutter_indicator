@@ -24,6 +24,7 @@ class _MinButtonsState extends State<MinButtons> {
       height: MediaQuery.of(context).size.height * 0.62,
       width: 80,
       child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
           itemCount: items.length,
           itemBuilder: (_, i) => Container(
                 margin: EdgeInsets.only(bottom: 7),

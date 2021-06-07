@@ -26,6 +26,7 @@ class _MovingAveragesListState extends State<MovingAveragesList> {
       width: MediaQuery.of(context).size.width * 0.9,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
         itemCount: value.length,
         itemBuilder: (_, i) => Container(
           margin: EdgeInsets.only(bottom: 22),
