@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_intern/Models/TechnicalIndicatorProvider.dart';
+import 'package:provider/provider.dart';
 
 class MinButtons extends StatefulWidget {
   @override
@@ -17,8 +19,21 @@ class _MinButtonsState extends State<MinButtons> {
     '1 WK',
     '1 MON'
   ];
+  List<String> query = [
+    '1min',
+    '5min',
+    '15min',
+    '30min',
+    '1hour',
+    '5hour',
+    'daily',
+    'monthly',
+    'weekly'
+  ];
   @override
   Widget build(BuildContext context) {
+    final tech = Provider.of<TechnicalIndicator>(context);
+
     return Container(
       padding: EdgeInsets.only(top: 10),
       height: MediaQuery.of(context).size.height * 0.62,
@@ -37,7 +52,9 @@ class _MinButtonsState extends State<MinButtons> {
                             side: i == 0
                                 ? BorderSide(color: Colors.white, width: 2)
                                 : BorderSide(color: Colors.white60, width: 2))),
-                    onPressed: () {},
+                    onPressed: () {
+                      tech.changeUi(query[i]);
+                    },
                     child: Text(
                       items[i],
                       style: TextStyle(

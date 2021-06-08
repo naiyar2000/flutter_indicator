@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_intern/Widgets/MovingAveragesList.dart';
+import 'package:flutter_intern/Models/TechnicalIndicatorProvider.dart';
 import 'package:flutter_intern/Widgets/TechnicalIndictor.dart';
-import 'package:flutter_intern/Widgets/classicDropdown.dart';
-import 'package:flutter_intern/Widgets/classicList.dart';
-import 'package:flutter_intern/Widgets/exponentialDropdown.dart';
-import 'package:flutter_intern/Widgets/levelIndicator.dart';
-import 'package:flutter_intern/Widgets/minButtons.dart';
-import 'package:flutter_intern/Widgets/oscillatorsList.dart';
+import 'package:flutter_intern/Widgets/widgetBlocks.dart/movingAverage.dart';
+import 'package:flutter_intern/Widgets/widgetBlocks.dart/oscillator.dart';
+import 'package:flutter_intern/Widgets/widgetBlocks.dart/pivot.dart';
+import 'package:flutter_intern/Widgets/widgetBlocks.dart/summary.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -14,8 +13,39 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  bool _isinit = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (_isinit) {
+      Provider.of<TechnicalIndicator>(context).fetchData();
+    }
+    _isinit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var buy = "";
+    var sell = "";
+    var neutral = "";
+    var oscillatorList = [];
+    var text = "";
+    final response = Provider.of<TechnicalIndicator>(context).response;
+    if (response["technical_indicator"] != null) {
+      oscillatorList = response["technical_indicator"]["table_data"];
+      buy = response["technical_indicator"]["buy"];
+      sell = response["technical_indicator"]["sell"];
+      neutral = response["technical_indicator"]["neutral"];
+      text = response["technical_indicator"]["text"];
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -38,148 +68,16 @@ class _MainScreenState extends State<MainScreen> {
                             fontWeight: FontWeight.w400))
                   ])),
               TechnicalIndictorDropDown(),
-              Text('Summary',
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
-              SizedBox(height: 20),
-              Container(
-                  padding: EdgeInsets.only(left: 50, right: 20),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [LevelIndicator(), MinButtons()])),
-              Text('Moving Averages',
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
-              Container(
-                  margin: EdgeInsets.only(top: 20, bottom: 10),
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Text("Buy", style: TextStyle(color: Colors.white)),
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8))))),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(children: [
-                        Text("7",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        Text("Buy",
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 16))
-                      ]),
-                      Column(children: [
-                        Text("-",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        Text("Neutral",
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 16))
-                      ]),
-                      Column(children: [
-                        Text("5",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        Text("Sell",
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 16))
-                      ]),
-                    ]),
+              Summary(),
+              MovingAverage(),
+              Oscillator(
+                sell: sell,
+                buy: buy,
+                neutral: neutral,
+                list: oscillatorList,
+                text: text,
               ),
-              ExponentialDropDown(),
-              Container(
-                decoration: BoxDecoration(
-                    color: Color(0xFF121212),
-                    borderRadius: BorderRadius.circular(5)),
-                margin: EdgeInsets.only(top: 20),
-                width: MediaQuery.of(context).size.width * 0.9,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Period',
-                          style:
-                              TextStyle(color: Colors.white60, fontSize: 16)),
-                      Text('Value',
-                          style:
-                              TextStyle(color: Colors.white60, fontSize: 16)),
-                      Text('Type',
-                          style:
-                              TextStyle(color: Colors.white60, fontSize: 16)),
-                    ]),
-              ),
-              MovingAveragesList(),
-              Text('Oscillators',
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
-              Container(
-                  margin: EdgeInsets.only(top: 20, bottom: 10),
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Text("STRONG SELL",
-                          style: TextStyle(color: Colors.white)),
-                      style: TextButton.styleFrom(
-                          backgroundColor: Color(0xFFFF2E50),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8))))),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(children: [
-                        Text("1",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        Text("Buy",
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 16))
-                      ]),
-                      Column(children: [
-                        Text("1",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        Text("Neutral",
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 16))
-                      ]),
-                      Column(children: [
-                        Text("9",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        Text("Sell",
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 16))
-                      ]),
-                    ]),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Color(0xFF121212),
-                    borderRadius: BorderRadius.circular(5)),
-                margin: EdgeInsets.only(top: 20),
-                width: MediaQuery.of(context).size.width * 0.9,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Name',
-                          style:
-                              TextStyle(color: Colors.white60, fontSize: 16)),
-                      Text('Value',
-                          style:
-                              TextStyle(color: Colors.white60, fontSize: 16)),
-                      Text('Action',
-                          style:
-                              TextStyle(color: Colors.white60, fontSize: 16)),
-                    ]),
-              ),
-              OscillatorsList(),
-              Text('Pivot Points',
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
-              ClassicDropDown(),
-              ClassicList()
+              Pivot()
             ]),
           ),
         ),

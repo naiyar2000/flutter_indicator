@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_intern">
+  <uses-permission android:name="android.permission.INTERNET"/> <!-- Add this -->
    <application
         android:label="flutter_intern"
         android:icon="@mipmap/ic_launcher">
@@ -39,3 +40,5 @@
             android:value="2" />
     </application>
 </manifest>
+
+
