@@ -30,6 +30,7 @@ class _MinButtonsState extends State<MinButtons> {
     'monthly',
     'weekly'
   ];
+  int selectedButton = 0;
   @override
   Widget build(BuildContext context) {
     final tech = Provider.of<TechnicalIndicator>(context);
@@ -49,16 +50,21 @@ class _MinButtonsState extends State<MinButtons> {
                     style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                            side: i == 0
+                            side: selectedButton == i
                                 ? BorderSide(color: Colors.white, width: 2)
                                 : BorderSide(color: Colors.white60, width: 2))),
                     onPressed: () {
                       tech.changeUi(query[i]);
+                      setState(() {
+                        selectedButton = i;
+                      });
                     },
                     child: Text(
                       items[i],
                       style: TextStyle(
-                          color: i == 0 ? Colors.white : Colors.white60),
+                          color: selectedButton == i
+                              ? Colors.white
+                              : Colors.white60),
                     )),
               )),
     );

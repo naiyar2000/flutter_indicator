@@ -76,7 +76,7 @@ class _MovingAverageState extends State<MovingAverage> {
             style: TextStyle(color: Colors.white, fontSize: 18),
             underline: SizedBox(),
             hint: Text("Exponential", style: TextStyle(color: Colors.white)),
-            dropdownColor: Colors.grey,
+            dropdownColor: Color(0xFF121212),
             value: valueChoose,
             onChanged: (newValue) {
               setState(() {
@@ -84,7 +84,9 @@ class _MovingAverageState extends State<MovingAverage> {
               });
             },
             items: listitem
-                .map((e) => DropdownMenuItem(child: Text(e), value: e))
+                .map((e) => DropdownMenuItem(
+                    child: Container(child: Expanded(flex: 1, child: Text(e))),
+                    value: e))
                 .toList(),
           ),
         )),
