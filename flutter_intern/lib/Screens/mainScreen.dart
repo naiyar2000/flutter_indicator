@@ -77,6 +77,9 @@ class _MainScreenState extends State<MainScreen> {
                 list: oscillatorList,
                 text: text,
               ),
+              SizedBox(
+                height: 30,
+              ),
               Pivot()
             ]),
           ),

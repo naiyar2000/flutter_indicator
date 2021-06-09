@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_intern/Models/TechnicalIndicatorProvider.dart';
 import 'package:flutter_intern/Widgets/MovingAveragesList.dart';
-import 'package:flutter_intern/Widgets/exponentialDropdown.dart';
 import 'package:provider/provider.dart';
 
 class MovingAverage extends StatefulWidget {
@@ -31,6 +30,7 @@ class _MovingAverageState extends State<MovingAverage> {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text('Moving Averages',
             style: TextStyle(color: Colors.white, fontSize: 20)),
@@ -65,31 +65,33 @@ class _MovingAverageState extends State<MovingAverage> {
             ]),
           ]),
         ),
-        Center(
-            child: Container(
-          decoration: BoxDecoration(
-              color: Color(0xFF121212), borderRadius: BorderRadius.circular(5)),
-          margin: EdgeInsets.only(top: 20),
-          width: 130,
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-          child: DropdownButton(
-            style: TextStyle(color: Colors.white, fontSize: 18),
-            underline: SizedBox(),
-            hint: Text("Exponential", style: TextStyle(color: Colors.white)),
-            dropdownColor: Color(0xFF121212),
-            value: valueChoose,
-            onChanged: (newValue) {
+        // ExponentialDropDown(),
+        InkWell(
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) => MovingList(valueChoose)).then((value) {
               setState(() {
-                valueChoose = newValue.toString();
+                valueChoose = value;
               });
-            },
-            items: listitem
-                .map((e) => DropdownMenuItem(
-                    child: Container(child: Expanded(flex: 1, child: Text(e))),
-                    value: e))
-                .toList(),
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Color(0xFF121212),
+                borderRadius: BorderRadius.circular(5)),
+            margin: EdgeInsets.only(top: 20),
+            width: 130,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(valueChoose,
+                      style: TextStyle(color: Colors.white60, fontSize: 18)),
+                  Icon(Icons.arrow_drop_down, color: Colors.white),
+                ]),
           ),
-        )),
+        ),
         Container(
           decoration: BoxDecoration(
               color: Color(0xFF121212), borderRadius: BorderRadius.circular(5)),
@@ -110,5 +112,48 @@ class _MovingAverageState extends State<MovingAverage> {
             : MovingAveragesList(simpleList),
       ],
     );
+  }
+}
+
+class MovingList extends StatefulWidget {
+  final text;
+  MovingList(this.text);
+
+  @override
+  MovingListState createState() => MovingListState();
+}
+
+class MovingListState extends State<MovingList> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: Color(0xFF121212),
+        height: 150,
+        child: ListView(
+          children: [
+            ListTile(
+                leading: Icon(Icons.check, color: widget.text == 'Exponential' ? Colors.white: Colors.transparent),
+                onTap: () {
+                  Navigator.pop(context, 'Exponential');
+                },
+                title: Text(
+                  'Exponential',
+                  style: TextStyle(
+                      color: widget.text == "Exponential"
+                          ? Colors.white
+                          : Colors.white60),
+                )),
+            ListTile(
+                leading: Icon(Icons.check, color: widget.text == 'Simple' ? Colors.white: Colors.transparent),
+                onTap: () {
+                  Navigator.pop(context, 'Simple');
+                },
+                title: Text('Simple',
+                    style: TextStyle(
+                        color: widget.text == "Simple"
+                            ? Colors.white
+                            : Colors.white60)))
+          ],
+        ));
   }
 }

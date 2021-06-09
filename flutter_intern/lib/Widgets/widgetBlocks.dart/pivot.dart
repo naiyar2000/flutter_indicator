@@ -21,30 +21,32 @@ class _PivotState extends State<Pivot> {
       children: [
         Text('Pivot Points',
             style: TextStyle(color: Colors.white, fontSize: 20)),
-        // ClassicDropDown(),
-        Center(
-            child: Container(
-          decoration: BoxDecoration(
-              color: Color(0xFF121212), borderRadius: BorderRadius.circular(5)),
-          margin: EdgeInsets.only(top: 20),
-          width: 130,
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-          child: DropdownButton(
-            style: TextStyle(color: Colors.white, fontSize: 18),
-            underline: SizedBox(),
-            hint: Text("Exponential", style: TextStyle(color: Colors.white)),
-            dropdownColor: Colors.grey,
-            value: valueChoose,
-            onChanged: (newValue) {
+        InkWell(
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) => MovingList(valueChoose)).then((value) {
               setState(() {
-                valueChoose = newValue.toString();
+                valueChoose = value;
               });
-            },
-            items: listitem
-                .map((e) => DropdownMenuItem(child: Text(e), value: e))
-                .toList(),
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Color(0xFF121212),
+                borderRadius: BorderRadius.circular(5)),
+            margin: EdgeInsets.only(top: 20),
+            width: 130,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(valueChoose,
+                      style: TextStyle(color: Colors.white60, fontSize: 18)),
+                  Icon(Icons.arrow_drop_down, color: Colors.white),
+                ]),
           ),
-        )),
+        ),
         if (valueChoose == "Classic" && response["pivot_points"] != null)
           ClassicList(response["pivot_points"]["classic"]),
         if (valueChoose == "Camarilla" && response["pivot_points"] != null)
@@ -57,5 +59,99 @@ class _PivotState extends State<Pivot> {
           ClassicList(response["pivot_points"]["woodie"])
       ],
     );
+  }
+}
+
+class MovingList extends StatefulWidget {
+  final text;
+  MovingList(this.text);
+
+  @override
+  MovingListState createState() => MovingListState();
+}
+
+class MovingListState extends State<MovingList> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: Color(0xFF121212),
+        height: 300,
+        child: ListView(
+          children: [
+            ListTile(
+                leading: Icon(Icons.check,
+                    color: widget.text == 'Classic'
+                        ? Colors.white
+                        : Colors.transparent),
+                onTap: () {
+                  Navigator.pop(context, 'Classic');
+                },
+                title: Text(
+                  'Classic',
+                  style: TextStyle(
+                      color: widget.text == 'Classic'
+                          ? Colors.white
+                          : Colors.white60),
+                )),
+            ListTile(
+                leading: Icon(Icons.check,
+                    color: widget.text == 'Camarilla'
+                        ? Colors.white
+                        : Colors.transparent),
+                onTap: () {
+                  Navigator.pop(context, 'Camarilla');
+                },
+                title: Text(
+                  'Camarilla',
+                  style: TextStyle(
+                      color: widget.text == 'Camarilla'
+                          ? Colors.white
+                          : Colors.white60),
+                )),
+            ListTile(
+                leading: Icon(Icons.check,
+                    color: widget.text == 'Demark'
+                        ? Colors.white
+                        : Colors.transparent),
+                onTap: () {
+                  Navigator.pop(context, 'Demark');
+                },
+                title: Text(
+                  'Demark',
+                  style: TextStyle(
+                      color: widget.text == 'Demark'
+                          ? Colors.white
+                          : Colors.white60),
+                )),
+            ListTile(
+                leading: Icon(Icons.check,
+                    color: widget.text == 'Fibonacci'
+                        ? Colors.white
+                        : Colors.transparent),
+                onTap: () {
+                  Navigator.pop(context, 'Fibonacci');
+                },
+                title: Text(
+                  'Fibonacci',
+                  style: TextStyle(
+                      color: widget.text == 'Fibonacci'
+                          ? Colors.white
+                          : Colors.white60),
+                )),
+            ListTile(
+                leading: Icon(Icons.check,
+                    color: widget.text == 'Woodie'
+                        ? Colors.white
+                        : Colors.transparent),
+                onTap: () {
+                  Navigator.pop(context, 'Woodie');
+                },
+                title: Text('Woodie',
+                    style: TextStyle(
+                        color: widget.text == 'Woodie'
+                            ? Colors.white
+                            : Colors.white60)))
+          ],
+        ));
   }
 }
